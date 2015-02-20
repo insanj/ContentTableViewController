@@ -36,6 +36,8 @@
 	
 	NSArray *stringArrayItem = @[@"Each of these strings", @"goes on a separate line"];
 	
+	NSAttributedString *attributeStringItem = [[NSAttributedString alloc] initWithString:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:10.0], NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
+	
 	UIGraphicsBeginImageContextWithOptions(CGSizeMake(100.0, 100.0), NO, [UIScreen mainScreen].scale);
 	CGContextRef context = UIGraphicsGetCurrentContext();
 	CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);
@@ -43,7 +45,17 @@
 	UIImage *imageItem = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	
-	self.contentController.items = @[stringItem, stringArrayItem, imageItem];
+	UIButton *viewItem = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 50.0, 50.0)];
+	[viewItem addTarget:self action:@selector(viewItemButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+	viewItem.backgroundColor = [UIColor blueColor];
+	viewItem.layer.masksToBounds = YES;
+	viewItem.layer.cornerRadius = 25.0;
+	
+	self.contentController.items = @[stringItem, stringArrayItem, attributeStringItem, imageItem, viewItem];
+}
+
+- (void)viewItemButtonTapped:(UIButton *)sender {
+	NSLog(@"%@ button was tapped", sender);
 }
 
 #pragma mark - content controller

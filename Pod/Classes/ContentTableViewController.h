@@ -27,13 +27,13 @@
 @property (nonatomic, readwrite) UIViewContentMode itemCellContentMode;
 
 /**
- *  Attributes used when drawing @p NSString or @p NSString-containing items. Defaults to @p [UIFont @p fontWithName:@"AvenirNext-Regular" @p size:18.0]
+ *  Attributes used when drawing @p NSString items. Defaults to @p [UIFont @p fontWithName:@"AvenirNext-Regular" @p size:18.0]
  */
 @property (strong, nonatomic) NSDictionary *itemCellTextAttributes;
 
 /**
  *  All items currently displayed, defaults to an empty array, with a empty state for the table.
- *	@p NSString, @p NSArray of @p NSStrings (each displays as a separate line), @p UIImage
+ *	@p NSString, @p NSAttributedString, @p UIImage, @p UIView, or arrays of one type of any of the above
  */
 @property (strong, nonatomic) NSArray *items;
 

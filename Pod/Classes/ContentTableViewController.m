@@ -231,11 +231,42 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	
 	if ([item isKindOfClass:[NSString class]]) {
 		NSString *stringItem = (NSString *)item;
+		
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = [[NSAttributedString alloc] initWithString:stringItem attributes:self.itemCellTextAttributes];
 		[stringCell setParentController:self];
 		return stringCell;
+	}
+	
+	else if ([item isKindOfClass:[NSAttributedString class]]) {
+		NSAttributedString *attributedStringItem = (NSAttributedString *)item;
+		
+		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
+		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+		stringCell.displayString = attributedStringItem;
+		[stringCell setParentController:self];
+		return stringCell;
+	}
+	
+	else if ([item isKindOfClass:[UIImage class]]) {
+		UIImage *imageItem = (UIImage *)item;
+		
+		ContentTableViewImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:kContentTableImageIdentifier forIndexPath:indexPath];
+		imageCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+		imageCell.displayImage = imageItem;
+		[imageCell setParentController:self];
+		return imageCell;
+	}
+	
+	else if ([item isKindOfClass:[UIView class]]) {
+		UIView *viewItem = (UIView *)item;
+		
+		ContentTableViewViewCell *viewCell = [tableView dequeueReusableCellWithIdentifier:kContentTableViewIdentifier forIndexPath:indexPath];
+		viewCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+		viewCell.displayView = viewItem;
+		[viewCell setParentController:self];
+		return viewCell;
 	}
 	
 	else if ([item isKindOfClass:[NSArray class]]) {
@@ -254,16 +285,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		return stringCell;
 	}
 	
-	else if ([item isKindOfClass:[UIImage class]]) {
-		UIImage *imageItem = (UIImage *)item;
-		
-		ContentTableViewImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:kContentTableImageIdentifier forIndexPath:indexPath];
-		imageCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
-		imageCell.displayImage = imageItem;
-		[imageCell setParentController:self];
-		return imageCell;
-	}
-	
     return nil;
 }
 							 
@@ -275,7 +296,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		[cell setSeparatorInset:UIEdgeInsetsMake(0, self.itemCellInsets.left, 0, self.itemCellInsets.right)];
 	}
 	
-	// Prevent the cell from inheriting the Table View's margin settings
+	// Prevent the cell from inheriting the table view's margin settings
 	if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
 		[cell setPreservesSuperviewLayoutMargins:NO];
 	}
