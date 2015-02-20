@@ -27,7 +27,7 @@
 @property (nonatomic, readwrite) UIViewContentMode itemCellContentMode; // UI_APPEARANCE_SELECTOR;
 
 /**
- *  Attributes used when drawing @p NSString or @p NSString-containing items, defaults to @p [UIFont @p fontWithName:@"AvenirNext-Regular" @p size:18.0]
+ *  Attributes used when drawing @p NSString or @p NSString-containing items. Defaults to @p [UIFont @p fontWithName:@"AvenirNext-Regular" @p size:18.0]
  */
 @property (strong, nonatomic) NSDictionary *itemCellTextAttributes; // UI_APPEARANCE_SELECTOR;
 

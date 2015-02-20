@@ -54,14 +54,20 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	self.tableView.backgroundColor = [UIColor whiteColor];
 	self.itemCellInsets = UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0);
 	self.itemCellBackgroundColor = [UIColor clearColor];
-	self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
+	
+	NSMutableParagraphStyle *lineHeightParagraphStyle = [[NSMutableParagraphStyle alloc] init];
+	lineHeightParagraphStyle.lineSpacing = 1.0;
+	lineHeightParagraphStyle.lineHeightMultiple = 1.0;
+	
+	self.itemCellTextAttributes = @{NSParagraphStyleAttributeName : lineHeightParagraphStyle,
+									NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
 	self.itemCellContentMode = UIViewContentModeCenter;
 	self.items = @[];
 	
 	UILabel *placeholderLabel = [[UILabel alloc] init];
 	placeholderLabel.font = [UIFont boldSystemFontOfSize:16.0];
 	placeholderLabel.textColor = [UIColor darkGrayColor];
-	placeholderLabel.attributedText = [[NSAttributedString alloc] initWithString:@"No Items Found" attributes:self.itemCellTextAttributes] ;
+	placeholderLabel.attributedText = [[NSAttributedString alloc] initWithString:@"No Items Found" attributes:self.itemCellTextAttributes];
 	placeholderLabel.textAlignment = NSTextAlignmentCenter;
 	placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	self.emptyPlaceholderView = placeholderLabel;
@@ -99,6 +105,8 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 
 - (void)setItemCellTextAttributes:(NSDictionary *)itemCellTextAttributes {
 	_itemCellTextAttributes = itemCellTextAttributes;
+	
+	// NSAssert(_itemCellTextAttributes[NSParagraphStyleAttributeName] != nil, @"itemCellTextAttributes must contain a NSParagraphStyle (under the NSParagraphStyleAttributeName key) to properly calculate cell height");
 	
 	if (self.isDisplaying) {
 		[self.tableView reloadData];
@@ -157,27 +165,33 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	
 	if ([item isKindOfClass:[NSString class]]) {
 		NSString *stringItem = (NSString *)item;
-		CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableView.frame.size.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
+		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
+		// CGFloat lineHeight = ((NSParagraphStyle *)self.itemCellTextAttributes[NSParagraphStyleAttributeName]).lineSpacing;
 		
-		CGFloat insetStringHeight = stringItemSize.height - (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetStringHeight;
+		CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
+		
+		CGFloat insetStringHeight = stringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+		return insetStringHeight; // + lineHeight;
 	}
 	
 	else if ([item isKindOfClass:[NSArray class]]) {
 		NSArray *arrayItem = (NSArray *)item;
 		CGFloat iteratingStringItemHeight = 0;
+		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
+		// CGFloat lineHeight = ((NSParagraphStyle *)self.itemCellTextAttributes[NSParagraphStyleAttributeName]).lineSpacing;
+		
 		for (NSString *stringItem in arrayItem) {
-			CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableView.frame.size.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
-			iteratingStringItemHeight += stringItemSize.height;
+			CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
+			iteratingStringItemHeight += stringItemSize.height + 1.0;
 		}
 		
-		CGFloat insetStringHeight = iteratingStringItemHeight - (self.itemCellInsets.top + self.itemCellInsets.bottom);
+		CGFloat insetStringHeight = iteratingStringItemHeight + self.itemCellInsets.top + self.itemCellInsets.bottom;
 		return insetStringHeight;
 	}
 	
 	else if ([item isKindOfClass:[UIImage class]]) {
 		UIImage *imageItem = (UIImage *)item;
-		CGFloat insetImageHeight = imageItem.size.height - (self.itemCellInsets.top + self.itemCellInsets.bottom);
+		CGFloat insetImageHeight = imageItem.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
 		return insetImageHeight;
 	}
 	
@@ -193,6 +207,7 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 			placeholderCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kContentTablePlaceholderIdentifier];
 			placeholderCell.backgroundColor = [UIColor clearColor];
 			placeholderCell.selectionStyle = UITableViewCellSelectionStyleNone;
+			placeholderCell.userInteractionEnabled = NO;
 			
 			self.emptyPlaceholderView.translatesAutoresizingMaskIntoConstraints = NO;
 			[placeholderCell.contentView addSubview:self.emptyPlaceholderView];
@@ -245,8 +260,8 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 			
 			NSLayoutConstraint *leftInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:self.itemCellInsets.left];
 			NSLayoutConstraint *topInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:self.itemCellInsets.top];
-			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:self.itemCellInsets.right];
-			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:self.itemCellInsets.bottom];
+			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-self.itemCellInsets.right];
+			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-self.itemCellInsets.bottom];
 			[stringCell.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
 		}
 		
@@ -260,10 +275,11 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	else if ([item isKindOfClass:[NSArray class]]) {
 		NSArray *arrayItem = (NSArray *)item;
 		
-		NSString __block *completeString = @"";
-		[arrayItem enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-			completeString = [NSString stringWithFormat:@"%@\n%@", completeString, obj];
-		}];
+		NSMutableString *completeString = [NSMutableString stringWithString:[arrayItem firstObject]];
+		for (int i = 1; i < arrayItem.count; i++) {
+			[completeString appendString:@"\n"];
+			[completeString appendString:arrayItem[i]];
+		}
 		
 		UITableViewCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier];
 		if (!stringCell) {
@@ -299,8 +315,8 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 			
 			NSLayoutConstraint *leftInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:self.itemCellInsets.left];
 			NSLayoutConstraint *topInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:self.itemCellInsets.top];
-			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:self.itemCellInsets.right];
-			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:self.itemCellInsets.bottom];
+			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-self.itemCellInsets.right];
+			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-self.itemCellInsets.bottom];
 			[stringCell.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
 		}
 		
@@ -328,8 +344,8 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 			
 			NSLayoutConstraint *leftInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:self.itemCellInsets.left];
 			NSLayoutConstraint *topInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:self.itemCellInsets.top];
-			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:self.itemCellInsets.right];
-			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:self.itemCellInsets.bottom];
+			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-self.itemCellInsets.right];
+			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-self.itemCellInsets.bottom];
 			[imageCell.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
 		}
 		
