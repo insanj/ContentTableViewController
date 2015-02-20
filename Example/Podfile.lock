@@ -1,0 +1,14 @@
+PODS:
+  - ContentTableViewController (0.1.0)
+
+DEPENDENCIES:
+  - ContentTableViewController (from `../`)
+
+EXTERNAL SOURCES:
+  ContentTableViewController:
+    :path: ../
+
+SPEC CHECKSUMS:
+  ContentTableViewController: c2fd28e095e35674fc2ddc512354e78bed0dc143
+
+COCOAPODS: 0.36.0.beta.2
