@@ -8,7 +8,7 @@
 
 // ContentTableViewController
 #define COCOAPODS_POD_AVAILABLE_ContentTableViewController
-#define COCOAPODS_VERSION_MAJOR_ContentTableViewController 0
-#define COCOAPODS_VERSION_MINOR_ContentTableViewController 1
+#define COCOAPODS_VERSION_MAJOR_ContentTableViewController 1
+#define COCOAPODS_VERSION_MINOR_ContentTableViewController 0
 #define COCOAPODS_VERSION_PATCH_ContentTableViewController 0
 

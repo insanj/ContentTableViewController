@@ -9,17 +9,17 @@
 
 Pod::Spec.new do |s|
   s.name             = "ContentTableViewController"
-  s.version          = "0.1"
-  s.summary          = "Super simple table view controller."
+  s.version          = "1.0"
+  s.summary          = "Super simple way to present content."
   s.description      = <<-DESC
-                       Super simple table view controller. Supply a few object types and the controller automatically creates a table around them for you.
+                       Super simple way to present content. Supply a few objects (NSString, NSArray of NSString, or UIImage items) and the controller automatically creates a table around them for you.
                        DESC
   s.homepage         = "https://github.com/insanj/ContentTableViewController"
-  # s.screenshots     = "www.example.com/screenshots_1", "www.example.com/screenshots_2"
-  s.license          = 'GNU'
-  s.author           = { "insanj" => "insanj@gmail.com" }
+  s.screenshots      = "https://github.com/insanj/ContentTableViewController/blob/master/example-empty.jpg", "https://github.com/insanj/ContentTableViewController/blob/master/example-full.jpg"
+  s.license          = "GNU"
+  s.author           = { "insanj" => "insanjmail@gmail.com" }
   s.source           = { :git => "https://github.com/insanj>/ContentTableViewController.git", :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/insanj'
+  # s.social_media_url = "https://twitter.com/insanj"
 
   s.platform     = :ios, '7.0'
   s.requires_arc = true

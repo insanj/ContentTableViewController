@@ -234,6 +234,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = [[NSAttributedString alloc] initWithString:stringItem attributes:self.itemCellTextAttributes];
+		[stringCell setParentController:self];
 		return stringCell;
 	}
 	
@@ -249,6 +250,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = [[NSAttributedString alloc] initWithString:completeString attributes:self.itemCellTextAttributes];
+		[stringCell setParentController:self];
 		return stringCell;
 	}
 	
@@ -258,6 +260,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:kContentTableImageIdentifier forIndexPath:indexPath];
 		imageCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		imageCell.displayImage = imageItem;
+		[imageCell setParentController:self];
 		return imageCell;
 	}
 	

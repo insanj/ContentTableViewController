@@ -47,6 +47,8 @@
 	NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:self.contentImageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-parentController.itemCellInsets.right];
 	NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:self.contentImageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-parentController.itemCellInsets.bottom];
 	[self.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
+	
+	[self needsUpdateConstraints];
 }
 
 @end
