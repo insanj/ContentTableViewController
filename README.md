@@ -6,14 +6,15 @@
 
 Super simple way to present content. A template table view that can take several kinds of objects and present them on-the-fly with **one line of code**. Customization of the view controller can be done as expected, customization of the table view can be done by accessing `contentController.tableView`, and customization of the cells can be done through a few [ContentTableViewController](https://github.com/insanj/ContentTableViewController/blob/master/Pod/Classes/ContentTableViewController.h) options.
 
+![](example-empty.png) ![](example-full.png)
+
 **Supported Object Types:**
 
 - `NSString`
 - `NSAttributedString`
+- `NSURL`
 - `UIImage`
 - `UIView`
-
-![](example-empty.png) ![](example-full.png)
 
 ## Usage
 

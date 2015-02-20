@@ -32,6 +32,11 @@
 @property (strong, nonatomic) NSDictionary *itemCellTextAttributes;
 
 /**
+ *  Attributes used when drawing @p NSURL items. Defaults to @p [UIFont @p fontWithName:@"AvenirNext-Regular" @p size:18.0] with @b blueColor
+ */
+@property (strong, nonatomic) NSDictionary *itemCellLinkAttributes;
+
+/**
  *  All items currently displayed, defaults to an empty array, with a empty state for the table.
  *	@p NSString, @p NSAttributedString, @p UIImage, @p UIView
  */

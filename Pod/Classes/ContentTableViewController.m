@@ -57,6 +57,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	self.itemCellInsets = UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0);
 	self.itemCellBackgroundColor = [UIColor clearColor];
 	self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
+	self.itemCellLinkAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0], NSForegroundColorAttributeName : [UIColor colorWithRed:54/255.0 green:136/255.0 blue:251/255.0 alpha:1.0]};
 	self.itemCellContentMode = UIViewContentModeLeft;
 	self.items = @[];
 	
@@ -184,6 +185,16 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		return insetStringHeight + 1;
 	}
 	
+	else if ([item isKindOfClass:[NSURL class]]) {
+		NSURL *URLItem = (NSURL *)item;
+		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
+		
+		CGSize URLItemSize = [[URLItem absoluteString] boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
+		
+		CGFloat insetStringHeight = URLItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+		return insetStringHeight + 1;
+	}
+	
 	else if ([item isKindOfClass:[UIImage class]]) {
 		UIImage *imageItem = (UIImage *)item;
 		CGFloat insetImageHeight = imageItem.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
@@ -255,6 +266,16 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = attributedStringItem;
+		[stringCell setParentController:self];
+		return stringCell;
+	}
+	
+	else if ([item isKindOfClass:[NSURL class]]) {
+		NSURL *URLItem = (NSURL *)item;
+		
+		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
+		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+		stringCell.displayString = [[NSAttributedString alloc] initWithString:[URLItem absoluteString] attributes:self.itemCellLinkAttributes];
 		[stringCell setParentController:self];
 		return stringCell;
 	}
