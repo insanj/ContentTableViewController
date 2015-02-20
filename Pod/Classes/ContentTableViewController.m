@@ -52,16 +52,16 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 
 - (void)commonInit {
 	self.tableView.backgroundColor = [UIColor whiteColor];
-	self.itemCellInsets = UIEdgeInsetsZero;
+	self.itemCellInsets = UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0);
 	self.itemCellBackgroundColor = [UIColor clearColor];
-	self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont systemFontOfSize:14.0]};
-	self.itemCellContentMode = UIViewContentModeScaleAspectFit;
+	self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
+	self.itemCellContentMode = UIViewContentModeCenter;
 	self.items = @[];
 	
 	UILabel *placeholderLabel = [[UILabel alloc] init];
 	placeholderLabel.font = [UIFont boldSystemFontOfSize:16.0];
 	placeholderLabel.textColor = [UIColor darkGrayColor];
-	placeholderLabel.text = @"No Items Found";
+	placeholderLabel.attributedText = [[NSAttributedString alloc] initWithString:@"No Items Found" attributes:self.itemCellTextAttributes] ;
 	placeholderLabel.textAlignment = NSTextAlignmentCenter;
 	placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	self.emptyPlaceholderView = placeholderLabel;

@@ -11,6 +11,8 @@
 
 @interface INSViewController () <ContentTableViewControllerDelegate>
 
+@property (strong, nonatomic) ContentTableViewController *contentController;
+
 @end
 
 @implementation INSViewController
@@ -18,22 +20,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 	
+	self.contentController = [[ContentTableViewController alloc] init];
+	self.contentController.contentDelegate = self;
+	self.contentController.title = @"Example Content";
+	self.contentController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshButtonTapped:)];
+	
+	self.viewControllers = @[self.contentController];
+}
+
+#pragma mark - actions
+
+- (void)refreshButtonTapped:(UIBarButtonItem *)sender {
 	NSString *stringItem = @"Hello world";
+	
 	NSArray *stringArrayItem = @[@"Each of these strings", @"goes on a separate line"];
 	
 	UIGraphicsBeginImageContextWithOptions(CGSizeMake(100.0, 100.0), NO, [UIScreen mainScreen].scale);
 	CGContextRef context = UIGraphicsGetCurrentContext();
-	
 	CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);
 	CGContextFillRect(context, CGRectMake(0.0, 0.0, 100.0, 100.0));
-	
 	UIImage *imageItem = UIGraphicsGetImageFromCurrentImageContext();
 	UIGraphicsEndImageContext();
 	
-	ContentTableViewController *contentController = [[ContentTableViewController alloc] initWithItems:@[stringItem, stringArrayItem, imageItem]];
-	contentController.contentDelegate = self;
-	self.viewControllers = @[contentController];
+	self.contentController.items = @[stringItem, stringArrayItem, imageItem];
 }
+
+#pragma mark - content controller
 
 - (void)contentTableViewController:(ContentTableViewController *)controller didTapItem:(NSObject *)item {
 	NSLog(@"%@ was tapped", item);

@@ -4,7 +4,12 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Pods-ContentTableViewController-ContentTableViewController-ContentTableViewController.xcscheme</key>
+		<key>ContentTableViewController.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
+		<key>Pods-ContentTableViewController-ContentTableViewController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -14,7 +19,7 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
-		<key>Pods-Tests-ContentTableViewController-ContentTableViewController.xcscheme</key>
+		<key>Pods-Tests-ContentTableViewController.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
@@ -27,22 +32,27 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>103088223AA1210E337DBCFA</key>
+		<key>48A27E357E41B6DA93083395</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>126A55D9DB4049E35168012D</key>
+		<key>5F704958650EC9B5CA8CFA4A</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>939ABE84BDEE4467425B9961</key>
+		<key>9BBC9679E7389BFE8FDC3B30</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>B6D799E53559BA4DE51CF227</key>
+		<key>DE850B2FD56456599281280A</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>E54C61EEA1FCDFF4AC8A6C3B</key>
 		<dict>
 			<key>primary</key>
 			<true/>

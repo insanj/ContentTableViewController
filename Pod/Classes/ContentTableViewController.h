@@ -12,24 +12,25 @@
 @interface ContentTableViewController : UITableViewController
 
 /**
- *  Insets applied to the inside of the cell, defaults to @b UIEdgeInsetsZero
+ *  Insets applied to the inside of the cell, defaults to @b UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0)
  */
 @property (nonatomic, readwrite) UIEdgeInsets itemCellInsets; // UI_APPEARANCE_SELECTOR;
 
 /**
- *  Background color of each item cell, defaults to @p clearColor with the @p tableView itself being @p whiteColor
+ *  Background color of each item cell, defaults to @b clearColor with the @p tableView itself being @p whiteColor
  */
 @property (strong, nonatomic) UIColor *itemCellBackgroundColor; // UI_APPEARANCE_SELECTOR;
 
 /**
- *  Attributes used when drawing @p NSString or @p NSString-containing items, defaults to setting the font to @p systemFontOfSize 14
+ *  Content display mode of each item cell, applied to the principal displaying object (e.g. @p UILabel, @p UIImageView), defaults to @b UIViewContentModeCenter
+ */
+@property (nonatomic, readwrite) UIViewContentMode itemCellContentMode; // UI_APPEARANCE_SELECTOR;
+
+/**
+ *  Attributes used when drawing @p NSString or @p NSString-containing items, defaults to @p [UIFont @p fontWithName:@"AvenirNext-Regular" @p size:18.0]
  */
 @property (strong, nonatomic) NSDictionary *itemCellTextAttributes; // UI_APPEARANCE_SELECTOR;
 
-/**
- *  Content display mode of each item cell, applied to the principal displaying object, defaults to @p UIViewContentModeScaleAspectFit
- */
-@property (nonatomic, readwrite) UIViewContentMode itemCellContentMode; // UI_APPEARANCE_SELECTOR;
 
 /**
  *  All items currently displayed, defaults to an empty array, with a empty state for the table.

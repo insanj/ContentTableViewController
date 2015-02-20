@@ -21,7 +21,6 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		762C9A74CE74533674C4030C /* libPods-Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AAE08DB0BF99893B9F6AEAA /* libPods-Tests.a */; };
-		9E769B4B1A9797D400E67F0C /* ContentTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E769B4A1A9797D400E67F0C /* ContentTableViewController.m */; };
 		FFB88C37C81D8E87F5C5FE80 /* libPods-ContentTableViewController.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 019E094F57EDA06DE55D4694 /* libPods-ContentTableViewController.a */; };
 /* End PBXBuildFile section */
 
@@ -61,9 +60,6 @@
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		87256EBAF32EBCE94808CBCA /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		9A5B9E98389764DF0B519E70 /* Pods-ContentTableViewController.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContentTableViewController.release.xcconfig"; path = "Pods/Target Support Files/Pods-ContentTableViewController/Pods-ContentTableViewController.release.xcconfig"; sourceTree = "<group>"; };
-		9E769B491A9797D400E67F0C /* ContentTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ContentTableViewController.h; sourceTree = "<group>"; };
-		9E769B4A1A9797D400E67F0C /* ContentTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ContentTableViewController.m; sourceTree = "<group>"; };
-		9E769B4C1A979B6400E67F0C /* ContentTableViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ContentTableViewControllerDelegate.h; sourceTree = "<group>"; };
 		A68309983D1A364BEED60864 /* Pods-Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Tests.release.xcconfig"; path = "Pods/Target Support Files/Pods-Tests/Pods-Tests.release.xcconfig"; sourceTree = "<group>"; };
 		B24ECE47036C861D0A6B3464 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		CC97204F3489A9050E4C4908 /* Pods-ContentTableViewController.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ContentTableViewController.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ContentTableViewController/Pods-ContentTableViewController.debug.xcconfig"; sourceTree = "<group>"; };
@@ -136,9 +132,6 @@
 				6003F59D195388D20070C39A /* INSAppDelegate.m */,
 				6003F5A5195388D20070C39A /* INSViewController.h */,
 				6003F5A6195388D20070C39A /* INSViewController.m */,
-				9E769B491A9797D400E67F0C /* ContentTableViewController.h */,
-				9E769B4A1A9797D400E67F0C /* ContentTableViewController.m */,
-				9E769B4C1A979B6400E67F0C /* ContentTableViewControllerDelegate.h */,
 				6003F5A8195388D20070C39A /* Images.xcassets */,
 				6003F594195388D20070C39A /* Supporting Files */,
 			);
@@ -361,7 +354,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6003F59E195388D20070C39A /* INSAppDelegate.m in Sources */,
-				9E769B4B1A9797D400E67F0C /* ContentTableViewController.m in Sources */,
 				6003F5A7195388D20070C39A /* INSViewController.m in Sources */,
 				6003F59A195388D20070C39A /* main.m in Sources */,
 			);
