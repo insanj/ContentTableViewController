@@ -4,9 +4,16 @@
 [![License](https://img.shields.io/cocoapods/l/ContentTableViewController.svg?style=flat)](http://cocoadocs.org/docsets/ContentTableViewController)
 [![Platform](https://img.shields.io/cocoapods/p/ContentTableViewController.svg?style=flat)](http://cocoadocs.org/docsets/ContentTableViewController)
 
-Super simple way to present content. A [ContentTableViewController](https://github.com/insanj/ContentTableViewController/blob/master/Pod/Classes/ContentTableViewController.h) can currently host `NSStrings`, `NSArrays` full of `NSStrings`, and `UIImages`. Documentation is provided Appledoc-style inline. 
+Super simple way to present content. A template table view that can take several kinds of objects and present them on-the-fly with **one line of code**. Customization of the view controller can be done as expected, customization of the table view can be done by accessing `contentController.tableView`, and customization of the cells can be done through a few [ContentTableViewController](https://github.com/insanj/ContentTableViewController/blob/master/Pod/Classes/ContentTableViewController.h) options.
 
-![](example-empty.jpg)![](example-full.jpg)
+**Supported Object Types:**
+
+- NSString
+- NSArray
+    - NSString
+- UIImage
+
+![](example-empty.png) ![](example-full.png)
 
 ## Usage
 

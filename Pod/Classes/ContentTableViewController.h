@@ -12,25 +12,24 @@
 @interface ContentTableViewController : UITableViewController
 
 /**
- *  Insets applied to the inside of the cell, defaults to @b UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0)
+ *  Insets applied to the inside of the cell, @b defaults to 10.0, 5.0, 10.0, 5.0
  */
-@property (nonatomic, readwrite) UIEdgeInsets itemCellInsets; // UI_APPEARANCE_SELECTOR;
+@property (nonatomic, readwrite) UIEdgeInsets itemCellInsets;
 
 /**
  *  Background color of each item cell, defaults to @b clearColor with the @p tableView itself being @p whiteColor
  */
-@property (strong, nonatomic) UIColor *itemCellBackgroundColor; // UI_APPEARANCE_SELECTOR;
+@property (strong, nonatomic) UIColor *itemCellBackgroundColor;
 
 /**
  *  Content display mode of each item cell, applied to the principal displaying object (e.g. @p UILabel, @p UIImageView), defaults to @b UIViewContentModeLeft
  */
-@property (nonatomic, readwrite) UIViewContentMode itemCellContentMode; // UI_APPEARANCE_SELECTOR;
+@property (nonatomic, readwrite) UIViewContentMode itemCellContentMode;
 
 /**
  *  Attributes used when drawing @p NSString or @p NSString-containing items. Defaults to @p [UIFont @p fontWithName:@"AvenirNext-Regular" @p size:18.0]
  */
-@property (strong, nonatomic) NSDictionary *itemCellTextAttributes; // UI_APPEARANCE_SELECTOR;
-
+@property (strong, nonatomic) NSDictionary *itemCellTextAttributes;
 
 /**
  *  All items currently displayed, defaults to an empty array, with a empty state for the table.

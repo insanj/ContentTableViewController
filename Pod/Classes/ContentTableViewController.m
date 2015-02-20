@@ -7,9 +7,11 @@
 //
 
 #import "ContentTableViewController.h"
+#import "ContentTableViewStringCell.h"
+#import "ContentTableViewImageCell.h"
+#import "ContentTableViewViewCell.h"
 
-static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder", *kContentTableStringIdentifier = @"ContentTable.String", *kContentTableImageIdentifier = @"ContentTable.Image";
-static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 105;
+static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder", *kContentTableStringIdentifier = @"ContentTable.String", *kContentTableImageIdentifier = @"ContentTable.Image", *kContentTableViewIdentifier = @"ContentTable.View";
 
 @interface ContentTableViewController ()
 
@@ -65,6 +67,11 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	placeholderLabel.textAlignment = NSTextAlignmentCenter;
 	placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
 	self.emptyPlaceholderView = placeholderLabel;
+	
+	[self.tableView registerClass:[ContentTableViewStringCell class] forCellReuseIdentifier:kContentTableStringIdentifier];
+	[self.tableView registerClass:[ContentTableViewImageCell class] forCellReuseIdentifier:kContentTableImageIdentifier];
+	[self.tableView registerClass:[ContentTableViewViewCell class] forCellReuseIdentifier:kContentTableViewIdentifier];
+
 }
 
 - (void)viewDidAppear:(BOOL)animated {
@@ -100,8 +107,6 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 - (void)setItemCellTextAttributes:(NSDictionary *)itemCellTextAttributes {
 	_itemCellTextAttributes = itemCellTextAttributes;
 	
-	// NSAssert(_itemCellTextAttributes[NSParagraphStyleAttributeName] != nil, @"itemCellTextAttributes must contain a NSParagraphStyle (under the NSParagraphStyleAttributeName key) to properly calculate cell height");
-	
 	if (self.isDisplaying) {
 		[self.tableView reloadData];
 	}
@@ -117,6 +122,8 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 
 - (void)setItems:(NSArray *)items {
 	_items = items;
+	
+	// self.tableView.separatorStyle = _items.count == 0 ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
 	
 	if (self.isDisplaying) {
 		[self.tableView reloadData];
@@ -151,7 +158,7 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (self.items.count == 0) {
-		return UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size.height;
+		return 100.0; // UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size.height;
 	}
 	
 	NSInteger itemIndex = tableView.style == UITableViewStylePlain ? indexPath.row : indexPath.section;
@@ -160,19 +167,17 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	if ([item isKindOfClass:[NSString class]]) {
 		NSString *stringItem = (NSString *)item;
 		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
-		// CGFloat lineHeight = ((NSParagraphStyle *)self.itemCellTextAttributes[NSParagraphStyleAttributeName]).lineSpacing;
 		
 		CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
 		
 		CGFloat insetStringHeight = stringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetStringHeight; // + lineHeight;
+		return insetStringHeight;
 	}
 	
 	else if ([item isKindOfClass:[NSArray class]]) {
 		NSArray *arrayItem = (NSArray *)item;
 		CGFloat iteratingStringItemHeight = 0;
 		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
-		// CGFloat lineHeight = ((NSParagraphStyle *)self.itemCellTextAttributes[NSParagraphStyleAttributeName]).lineSpacing;
 		
 		for (NSString *stringItem in arrayItem) {
 			CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
@@ -189,6 +194,12 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 		return insetImageHeight;
 	}
 	
+	else if ([item isKindOfClass:[UIView class]]) {
+		UIView *viewItem = (UIView *)item;
+		CGFloat insetViewHeight = viewItem.frame.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+		return insetViewHeight;
+	}
+	
 	return 0;
 }
 
@@ -197,6 +208,7 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (self.items.count == 0) {
 		UITableViewCell *placeholderCell = [tableView dequeueReusableCellWithIdentifier:kContentTablePlaceholderIdentifier];
+		
 		if (!placeholderCell) {
 			placeholderCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kContentTablePlaceholderIdentifier];
 			placeholderCell.backgroundColor = [UIColor clearColor];
@@ -219,50 +231,9 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	
 	if ([item isKindOfClass:[NSString class]]) {
 		NSString *stringItem = (NSString *)item;
-		
-		UITableViewCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier];
-		if (!stringCell) {
-			stringCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kContentTableStringIdentifier];
-			stringCell.backgroundColor = [UIColor clearColor];
-			stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
-			
-			UILabel *contentLabel = [[UILabel alloc] init];
-			contentLabel.backgroundColor = [UIColor clearColor];
-			contentLabel.contentMode = self.itemCellContentMode;
-			
-			switch (self.itemCellContentMode) {
-				default:
-				case UIViewContentModeLeft:
-					contentLabel.textAlignment = NSTextAlignmentLeft;
-					break;
-				case UIViewContentModeRight:
-					contentLabel.textAlignment = NSTextAlignmentRight;
-					break;
-				case UIViewContentModeCenter:
-					contentLabel.textAlignment = NSTextAlignmentCenter;
-					break;
-				case UIViewContentModeScaleAspectFill:
-				case UIViewContentModeScaleAspectFit:
-					contentLabel.textAlignment = NSTextAlignmentJustified;
-					break;
-			}
-			
-			contentLabel.translatesAutoresizingMaskIntoConstraints = NO;
-			contentLabel.tag = kContentTableLabelTag;
-			contentLabel.numberOfLines = 0;
-			[stringCell.contentView addSubview:contentLabel];
-			
-			NSLayoutConstraint *leftInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:self.itemCellInsets.left];
-			NSLayoutConstraint *topInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:self.itemCellInsets.top];
-			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-self.itemCellInsets.right];
-			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-self.itemCellInsets.bottom];
-			[stringCell.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
-		}
-		
-		
-		UILabel *contentLabel = (UILabel *)[stringCell viewWithTag:kContentTableLabelTag];
-		contentLabel.attributedText = [[NSAttributedString alloc] initWithString:stringItem attributes:self.itemCellTextAttributes];
-		
+		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
+		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+		stringCell.displayString = [[NSAttributedString alloc] initWithString:stringItem attributes:self.itemCellTextAttributes];
 		return stringCell;
 	}
 	
@@ -275,77 +246,18 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 			[completeString appendString:arrayItem[i]];
 		}
 		
-		UITableViewCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier];
-		if (!stringCell) {
-			stringCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kContentTableStringIdentifier];
-			stringCell.backgroundColor = [UIColor clearColor];
-			stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
-
-			UILabel *contentLabel = [[UILabel alloc] init];
-			contentLabel.backgroundColor = [UIColor clearColor];
-			contentLabel.contentMode = self.itemCellContentMode;
-			
-			switch (self.itemCellContentMode) {
-				default:
-				case UIViewContentModeLeft:
-					contentLabel.textAlignment = NSTextAlignmentLeft;
-					break;
-				case UIViewContentModeRight:
-					contentLabel.textAlignment = NSTextAlignmentRight;
-					break;
-				case UIViewContentModeCenter:
-					contentLabel.textAlignment = NSTextAlignmentCenter;
-					break;
-				case UIViewContentModeScaleAspectFill:
-				case UIViewContentModeScaleAspectFit:
-					contentLabel.textAlignment = NSTextAlignmentJustified;
-					break;
-			}
-			
-			contentLabel.translatesAutoresizingMaskIntoConstraints = NO;
-			contentLabel.tag = kContentTableLabelTag;
-			contentLabel.numberOfLines = 0;
-			[stringCell.contentView addSubview:contentLabel];
-			
-			NSLayoutConstraint *leftInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:self.itemCellInsets.left];
-			NSLayoutConstraint *topInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:self.itemCellInsets.top];
-			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-self.itemCellInsets.right];
-			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:stringCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-self.itemCellInsets.bottom];
-			[stringCell.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
-		}
-		
-		
-		UILabel *contentLabel = (UILabel *)[stringCell viewWithTag:kContentTableLabelTag];
-		contentLabel.attributedText = [[NSAttributedString alloc] initWithString:completeString attributes:self.itemCellTextAttributes];
-		
+		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
+		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+		stringCell.displayString = [[NSAttributedString alloc] initWithString:completeString attributes:self.itemCellTextAttributes];
 		return stringCell;
 	}
 	
 	else if ([item isKindOfClass:[UIImage class]]) {
 		UIImage *imageItem = (UIImage *)item;
 		
-		UITableViewCell *imageCell = [tableView dequeueReusableCellWithIdentifier:kContentTableImageIdentifier];
-		if (!imageCell) {
-			imageCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:kContentTableImageIdentifier];
-			imageCell.backgroundColor = [UIColor clearColor];
-			imageCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
-			
-			UIImageView *contentImageView = [[UIImageView alloc] init];
-			contentImageView.translatesAutoresizingMaskIntoConstraints = NO;
-			contentImageView.contentMode = self.itemCellContentMode;
-			contentImageView.tag = kCOntentTableImageViewTag;
-			[imageCell.contentView addSubview:contentImageView];
-			
-			NSLayoutConstraint *leftInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:self.itemCellInsets.left];
-			NSLayoutConstraint *topInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeTop multiplier:1 constant:self.itemCellInsets.top];
-			NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-self.itemCellInsets.right];
-			NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:contentImageView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:imageCell.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-self.itemCellInsets.bottom];
-			[imageCell.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
-		}
-		
-		UIImageView *contentImageView = (UIImageView *)[imageCell viewWithTag:kCOntentTableImageViewTag];
-		contentImageView.image = imageItem;
-		
+		ContentTableViewImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:kContentTableImageIdentifier forIndexPath:indexPath];
+		imageCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+		imageCell.displayImage = imageItem;
 		return imageCell;
 	}
 	
@@ -355,7 +267,7 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	cell.contentView.backgroundColor = self.itemCellBackgroundColor;
 	
-	/*// Special thanks to http://stackoverflow.com/questions/25770119/ios-8-uitableview-separator-inset-0-not-working
+	// Special thanks to http://stackoverflow.com/questions/25770119/ios-8-uitableview-separator-inset-0-not-working
 	if ([cell respondsToSelector:@selector(setSeparatorInset:)]) {
 		[cell setSeparatorInset:UIEdgeInsetsMake(0, self.itemCellInsets.left, 0, self.itemCellInsets.right)];
 	}
@@ -368,7 +280,7 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	// Explictly set your cell's layout margins
 	if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
 		[cell setLayoutMargins:UIEdgeInsetsMake(0, self.itemCellInsets.left, 0, self.itemCellInsets.right)];
-	}*/
+	}
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
