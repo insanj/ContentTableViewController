@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../ContentTableViewController.podspec
 
 SPEC CHECKSUMS:
-  ContentTableViewController: df7391f5f3e7a42450c024e3e4d008005902306d
+  ContentTableViewController: c372224b7a6c95ac87986c6088a959867a8468d1
 
 COCOAPODS: 0.35.0
