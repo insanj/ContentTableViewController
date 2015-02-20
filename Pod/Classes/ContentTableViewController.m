@@ -171,34 +171,44 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
 		
 		CGFloat insetStringHeight = stringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetStringHeight;
+		return insetStringHeight + 1;
 	}
 	
-	else if ([item isKindOfClass:[NSArray class]]) {
-		NSArray *arrayItem = (NSArray *)item;
-		CGFloat iteratingStringItemHeight = 0;
+	else if ([item isKindOfClass:[NSAttributedString class]]) {
+		NSAttributedString *attributedStringItem = (NSAttributedString *)item;
 		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
 		
-		for (NSString *stringItem in arrayItem) {
-			CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
-			iteratingStringItemHeight += stringItemSize.height + 1.0;
-		}
+		CGSize attributedStringItemSize = [attributedStringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
 		
-		CGFloat insetStringHeight = iteratingStringItemHeight + self.itemCellInsets.top + self.itemCellInsets.bottom;
-		return insetStringHeight;
+		CGFloat insetStringHeight = attributedStringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+		return insetStringHeight + 1;
 	}
 	
 	else if ([item isKindOfClass:[UIImage class]]) {
 		UIImage *imageItem = (UIImage *)item;
 		CGFloat insetImageHeight = imageItem.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetImageHeight;
+		return insetImageHeight + 1;
 	}
 	
 	else if ([item isKindOfClass:[UIView class]]) {
 		UIView *viewItem = (UIView *)item;
 		CGFloat insetViewHeight = viewItem.frame.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetViewHeight;
+		return insetViewHeight + 1;
 	}
+	
+	/*else if ([item isKindOfClass:[NSArray class]]) {
+		NSArray *arrayItem = (NSArray *)item;
+		CGFloat iteratingStringItemHeight = 0;
+		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
+		
+		for (NSString *stringItem in arrayItem) {
+	 CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
+	 iteratingStringItemHeight += stringItemSize.height + 1.0;
+		}
+		
+		CGFloat insetStringHeight = iteratingStringItemHeight + self.itemCellInsets.top + self.itemCellInsets.bottom;
+		return insetStringHeight;
+	 }*/
 	
 	return 0;
 }
@@ -269,7 +279,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		return viewCell;
 	}
 	
-	else if ([item isKindOfClass:[NSArray class]]) {
+	/*else if ([item isKindOfClass:[NSArray class]]) {
 		NSArray *arrayItem = (NSArray *)item;
 		
 		NSMutableString *completeString = [NSMutableString stringWithString:[arrayItem firstObject]];
@@ -283,7 +293,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		stringCell.displayString = [[NSAttributedString alloc] initWithString:completeString attributes:self.itemCellTextAttributes];
 		[stringCell setParentController:self];
 		return stringCell;
-	}
+	}*/
 	
     return nil;
 }

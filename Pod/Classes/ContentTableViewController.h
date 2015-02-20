@@ -33,7 +33,7 @@
 
 /**
  *  All items currently displayed, defaults to an empty array, with a empty state for the table.
- *	@p NSString, @p NSAttributedString, @p UIImage, @p UIView, or arrays of one type of any of the above
+ *	@p NSString, @p NSAttributedString, @p UIImage, @p UIView
  */
 @property (strong, nonatomic) NSArray *items;
 

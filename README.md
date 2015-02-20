@@ -12,7 +12,6 @@ Super simple way to present content. A template table view that can take several
 - `NSAttributedString`
 - `UIImage`
 - `UIView`
-- `NSArray` of any one type of any of the above
 
 ![](example-empty.png) ![](example-full.png)
 
