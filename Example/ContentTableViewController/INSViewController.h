@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface INSViewController : UIViewController
+@interface INSViewController : UINavigationController
 
 @end

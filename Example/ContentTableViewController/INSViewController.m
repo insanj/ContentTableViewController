@@ -7,23 +7,28 @@
 //
 
 #import "INSViewController.h"
-
-@interface INSViewController ()
-
-@end
+#import "ContentTableViewController.h"
 
 @implementation INSViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+	
+	NSString *stringItem = @"Hello world";
+	NSArray *stringArrayItem = @[@"Each of these strings", @"goes on a separate line"];
+	
+	UIGraphicsBeginImageContextWithOptions(CGSizeMake(100.0, 100.0), NO, [UIScreen mainScreen].scale);
+	CGContextRef context = UIGraphicsGetCurrentContext();
+	
+	CGContextSetFillColorWithColor(context, [UIColor greenColor].CGColor);
+	CGContextFillRect(context, CGRectMake(0.0, 0.0, 100.0, 100.0));
+	
+	UIImage *imageItem = UIGraphicsGetImageFromCurrentImageContext();
+	UIGraphicsEndImageContext();
+	
+	ContentTableViewController *contentController = [[ContentTableViewController alloc] initWithItems:@[stringItem, stringArrayItem, imageItem]];
+	
+	self.viewControllers = @[] ];
 }
 
 @end
