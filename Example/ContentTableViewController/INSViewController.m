@@ -22,6 +22,7 @@
 	
 	self.contentController = [[ContentTableViewController alloc] init];
 	self.contentController.contentDelegate = self;
+	self.contentController.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	self.contentController.title = @"Example Content";
 	self.contentController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshButtonTapped:)];
 	

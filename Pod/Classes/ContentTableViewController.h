@@ -22,7 +22,7 @@
 @property (strong, nonatomic) UIColor *itemCellBackgroundColor; // UI_APPEARANCE_SELECTOR;
 
 /**
- *  Content display mode of each item cell, applied to the principal displaying object (e.g. @p UILabel, @p UIImageView), defaults to @b UIViewContentModeCenter
+ *  Content display mode of each item cell, applied to the principal displaying object (e.g. @p UILabel, @p UIImageView), defaults to @b UIViewContentModeLeft
  */
 @property (nonatomic, readwrite) UIViewContentMode itemCellContentMode; // UI_APPEARANCE_SELECTOR;
 

@@ -54,14 +54,8 @@ static const NSInteger kContentTableLabelTag = 108, kCOntentTableImageViewTag = 
 	self.tableView.backgroundColor = [UIColor whiteColor];
 	self.itemCellInsets = UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0);
 	self.itemCellBackgroundColor = [UIColor clearColor];
-	
-	NSMutableParagraphStyle *lineHeightParagraphStyle = [[NSMutableParagraphStyle alloc] init];
-	lineHeightParagraphStyle.lineSpacing = 1.0;
-	lineHeightParagraphStyle.lineHeightMultiple = 1.0;
-	
-	self.itemCellTextAttributes = @{NSParagraphStyleAttributeName : lineHeightParagraphStyle,
-									NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
-	self.itemCellContentMode = UIViewContentModeCenter;
+	self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
+	self.itemCellContentMode = UIViewContentModeLeft;
 	self.items = @[];
 	
 	UILabel *placeholderLabel = [[UILabel alloc] init];
