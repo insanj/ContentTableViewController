@@ -33,7 +33,7 @@ it, simply add the following line to your Podfile:
 
 ## Author
 
-[Julian (insanj) Weiss](https://twitter.com/insanj), [julian@urlinq.com](mailto:julian@urlinq.com)
+[Julian (insanj) Weiss](https://twitter.com/insanj), [insanjmail@gmail.com](mailto:insanjmail@gmail.com)
 
 ## License
 

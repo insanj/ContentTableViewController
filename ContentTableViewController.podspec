@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.screenshots      = "https://raw.githubusercontent.com/insanj/ContentTableViewController/master/example-empty.png", "https://raw.githubusercontent.com/insanj/ContentTableViewController/master/example-full.png"
   s.license          = "GNU"
   s.author           = { "insanj" => "insanjmail@gmail.com" }
-  s.source           = { :git => "https://github.com/insanj>/ContentTableViewController.git", :tag => s.version.to_s }
+  s.source           = { :git => "https://github.com/insanj/ContentTableViewController.git", :tag => s.version.to_s }
   s.social_media_url = "https://twitter.com/insanj"
 
   s.platform     = :ios, '7.0'
