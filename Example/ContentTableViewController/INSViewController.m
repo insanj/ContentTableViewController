@@ -9,6 +9,10 @@
 #import "INSViewController.h"
 #import "ContentTableViewController.h"
 
+@interface INSViewController () <ContentTableViewControllerDelegate>
+
+@end
+
 @implementation INSViewController
 
 - (void)viewDidLoad {
@@ -27,8 +31,12 @@
 	UIGraphicsEndImageContext();
 	
 	ContentTableViewController *contentController = [[ContentTableViewController alloc] initWithItems:@[stringItem, stringArrayItem, imageItem]];
-	
-	self.viewControllers = @[] ];
+	contentController.contentDelegate = self;
+	self.viewControllers = @[contentController];
+}
+
+- (void)contentTableViewController:(ContentTableViewController *)controller didTapItem:(NSObject *)item {
+	NSLog(@"%@ was tapped", item);
 }
 
 @end
