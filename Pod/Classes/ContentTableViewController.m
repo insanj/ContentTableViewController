@@ -58,7 +58,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	self.itemCellBackgroundColor = [UIColor clearColor];
 	self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
 	self.itemCellLinkAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0], NSForegroundColorAttributeName : [UIColor colorWithRed:54/255.0 green:136/255.0 blue:251/255.0 alpha:1.0]};
-	self.itemCellContentMode = UIViewContentModeLeft;
+	self.itemCellContentMode = UIViewContentModeScaleAspectFit;
 	self.items = @[];
 	
 	UILabel *placeholderLabel = [[UILabel alloc] init];
@@ -72,7 +72,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	[self.tableView registerClass:[ContentTableViewStringCell class] forCellReuseIdentifier:kContentTableStringIdentifier];
 	[self.tableView registerClass:[ContentTableViewImageCell class] forCellReuseIdentifier:kContentTableImageIdentifier];
 	[self.tableView registerClass:[ContentTableViewViewCell class] forCellReuseIdentifier:kContentTableViewIdentifier];
-
 }
 
 - (void)viewDidAppear:(BOOL)animated {

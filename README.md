@@ -52,3 +52,4 @@ it, simply add the following line to your Podfile:
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
