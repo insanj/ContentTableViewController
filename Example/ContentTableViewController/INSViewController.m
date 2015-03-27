@@ -40,6 +40,7 @@
 	UIImage *wideImageItem = [UIImage imageNamed:@"cheese"];
 	UIImage *tallImageItem = [UIImage imageNamed:@"empire"];
 	UIImage *squareImageItem = [UIImage imageNamed:@"album"];
+	UIImage *smallImageItem = [UIImage imageNamed:@"yosemite"];
 
 	UIButton *viewItem = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 50.0, 50.0)];
 	[viewItem addTarget:self action:@selector(viewItemButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -47,7 +48,7 @@
 	viewItem.layer.masksToBounds = YES;
 	viewItem.layer.cornerRadius = 25.0;
 	
-	self.contentController.items = @[stringItem, attributeStringItem, linkItem, wideImageItem, tallImageItem, squareImageItem, viewItem];
+	self.contentController.items = @[stringItem, attributeStringItem, linkItem, wideImageItem, tallImageItem, squareImageItem, smallImageItem, viewItem];
 }
 
 - (void)viewItemButtonTapped:(UIButton *)sender {

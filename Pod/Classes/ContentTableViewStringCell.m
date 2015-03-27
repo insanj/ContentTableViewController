@@ -1,9 +1,9 @@
 //
-//  ContentTableViewStringCell.m
-//  Pods
+//  ContentTableViewStringCell.h
+//  ContentTableViewStringCell
 //
 //  Created by Julian Weiss on 2/20/15.
-//
+//  Copyright (c) 2015 insanj. All rights reserved.
 //
 
 #import "ContentTableViewStringCell.h"
@@ -21,9 +21,8 @@
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	
 	if (self) {
-		self.backgroundColor = [UIColor clearColor];
-
 		self.contentLabel = [[UILabel alloc] init];
+		self.contentLabel.userInteractionEnabled = NO;
 		self.contentLabel.backgroundColor = [UIColor clearColor];
 		self.contentLabel.translatesAutoresizingMaskIntoConstraints = NO;
 		self.contentLabel.numberOfLines = 0;
@@ -42,6 +41,7 @@
 }
 
 - (void)setParentController:(ContentTableViewController *)parentController {
+	[super setParentController:parentController];
 	self.contentLabel.contentMode = parentController.itemCellContentMode;
 
 	switch (parentController.itemCellContentMode) {
@@ -66,6 +66,8 @@
 	NSLayoutConstraint *rightInsetAttribute = [NSLayoutConstraint constraintWithItem:self.contentLabel attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1 constant:-parentController.itemCellInsets.right];
 	NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:self.contentLabel attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-parentController.itemCellInsets.bottom];
 	[self.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
+	
+	[self.contentView updateConstraintsIfNeeded];
 }
 
 @end

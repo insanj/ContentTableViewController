@@ -1,19 +1,17 @@
 //
 //  ContentTableViewViewCell.h
-//  
+//  ContentTableViewViewCell
 //
 //  Created by Julian Weiss on 2/20/15.
-//
+//  Copyright (c) 2015 insanj. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "ContentTableViewCell.h"
 
 @class ContentTableViewController;
 
-@interface ContentTableViewViewCell : UITableViewCell
+@interface ContentTableViewViewCell : ContentTableViewCell
 
 @property (strong, nonatomic) UIView *displayView;
-
-- (void)setParentController:(ContentTableViewController *)parentController;
 
 @end

@@ -2,7 +2,7 @@
 //  INSAppDelegate.h
 //  ContentTableViewController
 //
-//  Created by CocoaPods on 02/20/2015.
+//  Created by insanj on 02/20/2015.
 //  Copyright (c) 2014 insanj. All rights reserved.
 //
 

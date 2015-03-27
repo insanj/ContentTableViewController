@@ -1,19 +1,17 @@
 //
-//  ContentTableViewStringCell.h
-//  Pods
+//  ContentTableViewStrinCell.h
+//  ContentTableViewStringCell
 //
 //  Created by Julian Weiss on 2/20/15.
-//
+//  Copyright (c) 2015 insanj. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "ContentTableViewCell.h"
 
 @class ContentTableViewController;
 
-@interface ContentTableViewStringCell : UITableViewCell
+@interface ContentTableViewStringCell : ContentTableViewCell
 
 @property (strong, nonatomic) NSAttributedString *displayString;
-
-- (void)setParentController:(ContentTableViewController *)parentController;
 
 @end

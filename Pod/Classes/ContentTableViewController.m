@@ -10,6 +10,7 @@
 #import "ContentTableViewStringCell.h"
 #import "ContentTableViewImageCell.h"
 #import "ContentTableViewViewCell.h"
+#import "ContentTableViewCell.h"
 
 static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder", *kContentTableStringIdentifier = @"ContentTable.String", *kContentTableImageIdentifier = @"ContentTable.Image", *kContentTableViewIdentifier = @"ContentTable.View";
 
@@ -123,8 +124,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 - (void)setItems:(NSArray *)items {
 	_items = items;
 	
-	// self.tableView.separatorStyle = _items.count == 0 ? UITableViewCellSeparatorStyleNone : UITableViewCellSeparatorStyleSingleLine;
-	
 	if (self.isDisplaying) {
 		[self.tableView reloadData];
 	}
@@ -158,7 +157,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
 	if (self.items.count == 0) {
-		return 100.0; // UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size.height;
+		return 100.0;
 	}
 	
 	NSInteger itemIndex = tableView.style == UITableViewStylePlain ? indexPath.row : indexPath.section;
@@ -197,11 +196,21 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	else if ([item isKindOfClass:[UIImage class]]) {
 		UIImage *imageItem = (UIImage *)item;
 		
-		CGSize scaledImageSize = imageItem.size;
-		scaledImageSize.width = fmin(self.tableView.frame.size.width - (self.itemCellInsets.left + self.itemCellInsets.right), scaledImageSize.width);
-		scaledImageSize.height *= scaledImageSize.width / imageItem.size.width;
-	
-		return (scaledImageSize.height + self.itemCellInsets.top + self.itemCellInsets.bottom) + 1;
+		if (self.itemCellContentMode == UIViewContentModeScaleAspectFill || self.itemCellContentMode == UIViewContentModeScaleAspectFit || self.itemCellContentMode == UIViewContentModeScaleToFill) {
+			
+			CGSize scaledImageSize = imageItem.size;
+			scaledImageSize.width *= [UIScreen mainScreen].scale / imageItem.scale;
+			
+			scaledImageSize.width = fmin(self.tableView.frame.size.width - (self.itemCellInsets.left + self.itemCellInsets.right), scaledImageSize.width);
+			scaledImageSize.height *= scaledImageSize.width / imageItem.size.width;
+			
+			return (scaledImageSize.height + self.itemCellInsets.top + self.itemCellInsets.bottom) + 1;
+		}
+		
+		else {
+			CGFloat insetImageHeight = imageItem.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+			return insetImageHeight + 1;
+		}
 	}
 	
 	else if ([item isKindOfClass:[UIView class]]) {
@@ -259,7 +268,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = [[NSAttributedString alloc] initWithString:stringItem attributes:self.itemCellTextAttributes];
-		[stringCell setParentController:self];
 		return stringCell;
 	}
 	
@@ -269,7 +277,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = attributedStringItem;
-		[stringCell setParentController:self];
 		return stringCell;
 	}
 	
@@ -279,7 +286,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = [[NSAttributedString alloc] initWithString:[URLItem absoluteString] attributes:self.itemCellLinkAttributes];
-		[stringCell setParentController:self];
 		return stringCell;
 	}
 	
@@ -289,7 +295,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewImageCell *imageCell = [tableView dequeueReusableCellWithIdentifier:kContentTableImageIdentifier forIndexPath:indexPath];
 		imageCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		imageCell.displayImage = imageItem;
-		[imageCell setParentController:self];
 		return imageCell;
 	}
 	
@@ -299,7 +304,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewViewCell *viewCell = [tableView dequeueReusableCellWithIdentifier:kContentTableViewIdentifier forIndexPath:indexPath];
 		viewCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		viewCell.displayView = viewItem;
-		[viewCell setParentController:self];
 		return viewCell;
 	}
 	
@@ -315,7 +319,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
 		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
 		stringCell.displayString = [[NSAttributedString alloc] initWithString:completeString attributes:self.itemCellTextAttributes];
-		[stringCell setParentController:self];
 		return stringCell;
 	}*/
 	
@@ -323,6 +326,13 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 }
 							 
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
+	if ([cell isKindOfClass:[ContentTableViewCell class]]) {
+		ContentTableViewCell *contentCell = (ContentTableViewCell *)cell;
+		[contentCell.contentTapButton removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
+		[contentCell.contentTapButton addTarget:self action:@selector(contentTapButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+		[contentCell setParentController:self];
+	}
+	
 	cell.contentView.backgroundColor = self.itemCellBackgroundColor;
 	
 	// Special thanks to http://stackoverflow.com/questions/25770119/ios-8-uitableview-separator-inset-0-not-working
@@ -330,19 +340,22 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		[cell setSeparatorInset:UIEdgeInsetsMake(0, self.itemCellInsets.left, 0, self.itemCellInsets.right)];
 	}
 	
-	// Prevent the cell from inheriting the table view's margin settings
 	if ([cell respondsToSelector:@selector(setPreservesSuperviewLayoutMargins:)]) {
 		[cell setPreservesSuperviewLayoutMargins:NO];
 	}
 	
-	// Explictly set your cell's layout margins
 	if ([cell respondsToSelector:@selector(setLayoutMargins:)]) {
 		[cell setLayoutMargins:UIEdgeInsetsMake(0, self.itemCellInsets.left, 0, self.itemCellInsets.right)];
 	}
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-	[tableView deselectRowAtIndexPath:indexPath animated:YES];
+#pragma mark - actions
+
+- (void)contentTapButtonTapped:(UIButton *)sender {
+	UIView *cell = sender.superview;
+	for ( ; ![cell isKindOfClass:[UITableViewCell class]]; cell = cell.superview);
+	
+	NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)cell];
 	
 	if (self.contentDelegate) {
 		NSInteger itemIndex = self.tableView.style == UITableViewStylePlain ? indexPath.row : indexPath.section;

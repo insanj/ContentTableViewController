@@ -1,9 +1,9 @@
 //
-//  ContentTableViewViewCell.m
-//  
+//  ContentTableViewViewCell.h
+//  ContentTableViewViewCell
 //
 //  Created by Julian Weiss on 2/20/15.
-//
+//  Copyright (c) 2015 insanj. All rights reserved.
 //
 
 #import "ContentTableViewViewCell.h"
@@ -22,9 +22,7 @@
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
 	self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
 	
-	if (self) {
-		self.backgroundColor = [UIColor clearColor];
-		
+	if (self) {		
 		self.displayView = [[UIView alloc] initWithFrame:CGRectMake(0.0, 0.0, 40.0, 40.0)];
 		[self.contentView addSubview:self.displayView];
 	}
@@ -49,6 +47,7 @@
 }
 
 - (void)setParentController:(ContentTableViewController *)parentController {
+	[super setParentController:parentController];
 	self.displayView.contentMode = parentController.itemCellContentMode;
 	
 	NSLayoutConstraint *leftInsetAttribute = [NSLayoutConstraint constraintWithItem:self.displayView attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1 constant:parentController.itemCellInsets.left];
@@ -57,24 +56,7 @@
 	NSLayoutConstraint *bottomInsetAttribute = [NSLayoutConstraint constraintWithItem:self.displayView attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1 constant:-parentController.itemCellInsets.bottom];
 	[self.contentView addConstraints:@[leftInsetAttribute, topInsetAttribute, rightInsetAttribute, bottomInsetAttribute]];
 	
-	[self needsUpdateConstraints];
-}
-
-- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
-	[super setSelected:selected animated:animated];
-	
-	if (selected){
-		self.displayView.backgroundColor = self.displayViewBackgroundColor;
-	}
-}
-
--(void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated{
-	
-	[super setHighlighted:highlighted animated:animated];
-	
-	if (highlighted){
-		self.displayView.backgroundColor = self.displayViewBackgroundColor;
-	}
+	[self.contentView updateConstraintsIfNeeded];
 }
 
 @end
