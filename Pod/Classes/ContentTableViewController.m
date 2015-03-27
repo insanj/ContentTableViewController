@@ -196,8 +196,12 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	
 	else if ([item isKindOfClass:[UIImage class]]) {
 		UIImage *imageItem = (UIImage *)item;
-		CGFloat insetImageHeight = imageItem.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetImageHeight + 1;
+		
+		CGSize scaledImageSize = imageItem.size;
+		scaledImageSize.width = fmin(self.tableView.frame.size.width - (self.itemCellInsets.left + self.itemCellInsets.right), scaledImageSize.width);
+		scaledImageSize.height *= scaledImageSize.width / imageItem.size.width;
+	
+		return (scaledImageSize.height + self.itemCellInsets.top + self.itemCellInsets.bottom) + 1;
 	}
 	
 	else if ([item isKindOfClass:[UIView class]]) {

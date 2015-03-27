@@ -1,5 +1,5 @@
 PODS:
-  - ContentTableViewController (1.0)
+  - ContentTableViewController (1.1)
 
 DEPENDENCIES:
   - ContentTableViewController (from `../ContentTableViewController.podspec`)
@@ -9,6 +9,6 @@ EXTERNAL SOURCES:
     :path: ../ContentTableViewController.podspec
 
 SPEC CHECKSUMS:
-  ContentTableViewController: c372224b7a6c95ac87986c6088a959867a8468d1
+  ContentTableViewController: 42619d7ecb2c7fa7587b9b776c6ecc2595d787f3
 
 COCOAPODS: 0.35.0

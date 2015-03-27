@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "76D1F537ADBB72464A45EA52"
+               BlueprintIdentifier = "B73A68471AF03BCB00240EC3"
                BuildableName = "libPods-ContentTableViewController.a"
                BlueprintName = "Pods-ContentTableViewController"
                ReferencedContainer = "container:Pods.xcodeproj">

@@ -22,7 +22,6 @@
 	
 	self.contentController = [[ContentTableViewController alloc] init];
 	self.contentController.contentDelegate = self;
-	// self.contentController.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
 	self.contentController.title = @"Example Content";
 	self.contentController.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(refreshButtonTapped:)];
 	
@@ -34,21 +33,21 @@
 - (void)refreshButtonTapped:(UIBarButtonItem *)sender {
 	NSString *stringItem = @"Hello world";
 	
-	// NSArray *stringArrayItem = @[@"Each of these strings", @"goes on a separate line"];
-	
 	NSAttributedString *attributeStringItem = [[NSAttributedString alloc] initWithString:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:10.0], NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
 	
 	NSURL *linkItem = [NSURL URLWithString:@"https://github.com/insanj/ContentTableViewController"];
 	
-	UIImage *imageItem = [UIImage imageNamed:@"yosemite.png"];
-		
+	UIImage *wideImageItem = [UIImage imageNamed:@"cheese"];
+	UIImage *tallImageItem = [UIImage imageNamed:@"empire"];
+	UIImage *squareImageItem = [UIImage imageNamed:@"album"];
+
 	UIButton *viewItem = [[UIButton alloc] initWithFrame:CGRectMake(0.0, 0.0, 50.0, 50.0)];
 	[viewItem addTarget:self action:@selector(viewItemButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 	viewItem.backgroundColor = [UIColor blueColor];
 	viewItem.layer.masksToBounds = YES;
 	viewItem.layer.cornerRadius = 25.0;
 	
-	self.contentController.items = @[stringItem, attributeStringItem, linkItem, imageItem, viewItem];
+	self.contentController.items = @[stringItem, attributeStringItem, linkItem, wideImageItem, tallImageItem, squareImageItem, viewItem];
 }
 
 - (void)viewItemButtonTapped:(UIButton *)sender {
@@ -62,7 +61,6 @@
 	if ([item isKindOfClass:[NSURL class]]) {
 		[[UIApplication sharedApplication] openURL:(NSURL *)item];
 	}
-	
 }
 
 @end
