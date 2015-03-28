@@ -328,8 +328,12 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 - (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath {
 	if ([cell isKindOfClass:[ContentTableViewCell class]]) {
 		ContentTableViewCell *contentCell = (ContentTableViewCell *)cell;
-		[contentCell.contentTapButton removeTarget:nil action:NULL forControlEvents:UIControlEventTouchUpInside];
+		[contentCell.contentTapButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
+		[contentCell.contentTapButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchDown];
+
 		[contentCell.contentTapButton addTarget:self action:@selector(contentTapButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+		[contentCell.contentTapButton addTarget:self action:@selector(contentTapButtonDown:) forControlEvents:UIControlEventTouchDown];
+
 		[contentCell setParentController:self];
 	}
 	
@@ -352,14 +356,23 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 #pragma mark - actions
 
 - (void)contentTapButtonTapped:(UIButton *)sender {
-	UIView *cell = sender.superview;
-	for ( ; ![cell isKindOfClass:[UITableViewCell class]]; cell = cell.superview);
-	
-	NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)cell];
-	
 	if (self.contentDelegate) {
+		UIView *cell = sender.superview;
+		for ( ; ![cell isKindOfClass:[UITableViewCell class]]; cell = cell.superview);
+		
+		NSIndexPath *indexPath = [self.tableView indexPathForCell:(UITableViewCell *)cell];
 		NSInteger itemIndex = self.tableView.style == UITableViewStylePlain ? indexPath.row : indexPath.section;
 		[self.contentDelegate contentTableViewController:self didTapItem:self.items[itemIndex]];
+	}
+}
+
+- (void)contentTapButtonDown:(UIButton *)sender {
+	if (self.contentDelegate && [self.contentDelegate respondsToSelector:@selector(contentTableViewController:cellStartingBeingTouched:)]) {
+
+		UIView *cell = sender.superview;
+		for ( ; ![cell isKindOfClass:[UITableViewCell class]]; cell = cell.superview);
+
+		[self.contentDelegate contentTableViewController:self cellStartingBeingTouched:(ContentTableViewCell *)cell];
 	}
 }
 							 

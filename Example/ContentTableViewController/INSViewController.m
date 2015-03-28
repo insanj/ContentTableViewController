@@ -8,6 +8,7 @@
 
 #import "INSViewController.h"
 #import "ContentTableViewController.h"
+#import "ContentTableViewCell.h"
 
 @interface INSViewController () <ContentTableViewControllerDelegate>
 
@@ -62,6 +63,17 @@
 	if ([item isKindOfClass:[NSURL class]]) {
 		[[UIApplication sharedApplication] openURL:(NSURL *)item];
 	}
+}
+
+- (void)contentTableViewController:(ContentTableViewController *)controller cellStartingBeingTouched:(ContentTableViewCell *)cell {
+	[self touchesBeganForCell:cell];
+	
+	[cell.contentTapButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchDragEnter]
+	[cell.contentTapButton addTarget:self action:@selector(touchesBeganForCell:) forControlEvents:UIControlEventTouchDown];
+}
+
+- (void)touchesBeganForCell:(ContentTableViewCell *)cell {
+	
 }
 
 @end
