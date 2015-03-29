@@ -14,6 +14,8 @@
 
 @property (strong, nonatomic) ContentTableViewController *contentController;
 
+@property (nonatomic, readwrite) BOOL animatingForTouch, animatingForUntouch;
+
 @end
 
 @implementation INSViewController
@@ -65,15 +67,51 @@
 	}
 }
 
-- (void)contentTableViewController:(ContentTableViewController *)controller cellStartingBeingTouched:(ContentTableViewCell *)cell {
+/*- (void)contentTableViewController:(ContentTableViewController *)controller cellStartingBeingTouched:(ContentTableViewCell *)cell {
 	[self touchesBeganForCell:cell];
 	
 	[cell.contentTapButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside | UIControlEventTouchDragEnter]
 	[cell.contentTapButton addTarget:self action:@selector(touchesBeganForCell:) forControlEvents:UIControlEventTouchDown];
+}*/
+
+- (void)contentTableViewController:(ContentTableViewController *)controller cellStartedBeingTouched:(ContentTableViewCell *)cell {
+	[self animateCellForTouch:cell];
 }
 
-- (void)touchesBeganForCell:(ContentTableViewCell *)cell {
+- (void)contentTableViewController:(ContentTableViewController *)controller cellStoppedBeingTouched:(ContentTableViewCell *)cell {
+	[self animateCellForUntouch:cell];
+}
+
+#define TOUCH_ANIMATION_TIME 0.2
+
+- (void)animateCellForTouch:(ContentTableViewCell *)cell {
+	if (!_animatingForTouch) {
+		_animatingForTouch = YES;
+		[UIView animateWithDuration:TOUCH_ANIMATION_TIME animations:^{
+			cell.contentView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.1];
+		} completion:^(BOOL finished) {
+			_animatingForTouch = NO;
+		}];
+	}
 	
+	else if (_animatingForUntouch) {
+		[self performSelector:@selector(animateCellForTouch:) withObject:cell afterDelay:TOUCH_ANIMATION_TIME];
+	}
+}
+
+- (void)animateCellForUntouch:(ContentTableViewCell *)cell {
+	if (!_animatingForUntouch) {
+		_animatingForUntouch = YES;
+		[UIView animateWithDuration:TOUCH_ANIMATION_TIME animations:^{
+			cell.contentView.backgroundColor = [UIColor whiteColor];
+		} completion:^(BOOL finished) {
+			_animatingForUntouch = NO;
+		}];
+	}
+	
+	else if (_animatingForTouch) {
+		[self performSelector:@selector(animateCellForUntouch:) withObject:cell afterDelay:TOUCH_ANIMATION_TIME];
+	}
 }
 
 @end

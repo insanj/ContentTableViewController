@@ -31,6 +31,8 @@
  */
 @property (strong, nonatomic) UIButton *contentTapButton;
 
+// @property (nonatomic, readwrite) BOOL setDetectableSinceDequeue;
+
 /**
  *  Updates cell appearance based on appearance properties of @p ContentTableViewController.
  */

@@ -16,9 +16,14 @@
 @optional
 
 /**
- *  Optional delegate method for extra appearance customizability (using this to add actions for any @p UIControlEvent on the @p cell's @p contentTapButton). Recommended to change appearance for @p touchDown here, then add action for @p touchUp which then removes itself after firing.
+ *  Optional delegate method for extra appearance customizability, to be used in conjunction with @p contentTableViewController:cellStoppedBeingTouched:
  */
-- (void)contentTableViewController:(ContentTableViewController *)controller cellStartingBeingTouched:(ContentTableViewCell *)cell;
+- (void)contentTableViewController:(ContentTableViewController *)controller cellStartedBeingTouched:(ContentTableViewCell *)cell;
+
+/**
+ *  Optional delegate method for extra appearance customizability, to be used in conjunction with @p contentTableViewController:cellStartedBeingTouched:
+ */
+- (void)contentTableViewController:(ContentTableViewController *)controller cellStoppedBeingTouched:(ContentTableViewCell *)cell;
 
 @required
 
