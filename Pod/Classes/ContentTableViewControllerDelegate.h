@@ -27,6 +27,9 @@
 
 @required
 
+/**
+ *  Required delegate method which fires every tap of the cell. Gurantees accuracy, unlike traditional @p UITableViewDelegates. Equivalent of @p touchUpInside -- use @p cellStartedBeingTouched and @p cellStoppedBeingTouched for appearance updates.
+ */
 - (void)contentTableViewController:(ContentTableViewController *)controller didTapItem:(NSObject *)item;
 
 @end

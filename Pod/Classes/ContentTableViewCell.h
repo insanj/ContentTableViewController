@@ -11,27 +11,14 @@
 @class ContentTableViewController, ContentTableViewCell ;
 
 /**
- *  Optional delegate for extra appearance customizability (using @p startedBeingTouched: and @p startedBeingTouched: for touch events).
- */
-/*@protocol ContentTableViewCellDelegate <NSObject>
-
-@required
-- (void)contentTableViewCell:(ContentTableViewCell *)cell startedBeingTouched:(UITouch *)touch;
-- (void)contentTableViewCell:(ContentTableViewCell *)cell stoppedBeingTouched:(UITouch *)touch;
-
-@end*/
-
-/**
  *  Superclass for all content-holding cells in a @p ContentTableViewController -- which does not include empty or placeholder cells.
  */
 @interface ContentTableViewCell : UITableViewCell
 
 /**
- *  Tap-recognizing button which replaces the (frequently buggy) selection property of @p UITableViewCells. Using
+ *  Tap-recognizing button which replaces the (frequently buggy) selection property of @p UITableViewCells. Only needs to be used internally, as it provides the information for @p contentTableViewController:cellStartedBeingTouched: and its sister method.
  */
 @property (strong, nonatomic) UIButton *contentTapButton;
-
-// @property (nonatomic, readwrite) BOOL setDetectableSinceDequeue;
 
 /**
  *  Updates cell appearance based on appearance properties of @p ContentTableViewController.

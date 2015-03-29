@@ -27,15 +27,16 @@
 		self.contentTapButton.translatesAutoresizingMaskIntoConstraints = NO;
 		[self.contentView addSubview:_contentTapButton];
 		
-		[self.contentView addConstraints:@[[NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0],
-										   [NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0],
-										   [NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0],
-										   [NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0],]];
+		NSLayoutConstraint *leftConstraint = [NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0];
+		NSLayoutConstraint *topConstraint =  [NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0];
+		NSLayoutConstraint *rightConstraint = [NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0];
+		NSLayoutConstraint *bottomConstraint = [NSLayoutConstraint constraintWithItem:_contentTapButton attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self.contentView attribute:NSLayoutAttributeBottom multiplier:1.0 constant:0];
+		
+		[self.contentView addConstraints:@[leftConstraint, topConstraint, rightConstraint, bottomConstraint]];
 	}
 	
 	return self;
 }
-
 
 - (void)setParentController:(ContentTableViewController *)parentController {
 	if (!_currentParentController || _currentParentController != parentController) {
