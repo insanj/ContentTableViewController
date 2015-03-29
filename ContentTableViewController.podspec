@@ -9,7 +9,7 @@
 
 Pod::Spec.new do |s|
   s.name             = "ContentTableViewController"
-  s.version          = "1.2"
+  s.version          = "1.2.1"
   s.summary          = "Super simple way to present content."
   s.description      = <<-DESC
                        Super simple way to present content. A template table view that can take several kinds of objects and present them on-the-fly with one line of code. Customization of the view controller can be done as expected, customization of the table view can be done by accessing contentController.tableView, and customization of the cells can be done through a few ContentTableViewController options.
