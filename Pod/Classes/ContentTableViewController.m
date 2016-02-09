@@ -162,6 +162,7 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
         }
     }
     
+    _itemHeights = runningItemHeights;
     [self.tableView reloadData];
 }
 
