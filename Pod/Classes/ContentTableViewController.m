@@ -11,12 +11,15 @@
 #import "ContentTableViewImageCell.h"
 #import "ContentTableViewViewCell.h"
 #import "ContentTableViewCell.h"
+#import "ContentTableViewVideoCell.h"
 
-static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder", *kContentTableStringIdentifier = @"ContentTable.String", *kContentTableImageIdentifier = @"ContentTable.Image", *kContentTableViewIdentifier = @"ContentTable.View";
+static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder", *kContentTableStringIdentifier = @"ContentTable.String", *kContentTableImageIdentifier = @"ContentTable.Image", *kContentTableViewIdentifier = @"ContentTable.View", *kContentTableVideoIdentifier = @"ContentTable.Video";
 
 @interface ContentTableViewController ()
 
 @property (nonatomic, readwrite) BOOL isDisplaying;
+
+@property (strong, nonatomic) NSArray *itemHeights;
 
 @end
 
@@ -53,28 +56,6 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	return self;
 }
 
-- (void)commonInit {
-	self.tableView.backgroundColor = [UIColor whiteColor];
-	self.itemCellInsets = UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0);
-	self.itemCellBackgroundColor = [UIColor clearColor];
-	self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
-	self.itemCellLinkAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0], NSForegroundColorAttributeName : [UIColor colorWithRed:54/255.0 green:136/255.0 blue:251/255.0 alpha:1.0]};
-	self.itemCellContentMode = UIViewContentModeScaleAspectFit;
-	self.items = @[];
-	
-	UILabel *placeholderLabel = [[UILabel alloc] init];
-	placeholderLabel.font = [UIFont boldSystemFontOfSize:16.0];
-	placeholderLabel.textColor = [UIColor darkGrayColor];
-	placeholderLabel.attributedText = [[NSAttributedString alloc] initWithString:@"No Items Found" attributes:self.itemCellTextAttributes];
-	placeholderLabel.textAlignment = NSTextAlignmentCenter;
-	placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
-	self.emptyPlaceholderView = placeholderLabel;
-	
-	[self.tableView registerClass:[ContentTableViewStringCell class] forCellReuseIdentifier:kContentTableStringIdentifier];
-	[self.tableView registerClass:[ContentTableViewImageCell class] forCellReuseIdentifier:kContentTableImageIdentifier];
-	[self.tableView registerClass:[ContentTableViewViewCell class] forCellReuseIdentifier:kContentTableViewIdentifier];
-}
-
 - (void)viewDidAppear:(BOOL)animated {
 	[super viewDidAppear:animated];
 	
@@ -85,6 +66,103 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 	[super viewDidDisappear:animated];
 	
 	self.isDisplaying = NO;
+}
+
+- (void)commonInit {
+    self.tableView.backgroundColor = [UIColor whiteColor];
+    self.itemCellInsets = UIEdgeInsetsMake(10.0, 5.0, 10.0, 5.0);
+    self.itemCellBackgroundColor = [UIColor clearColor];
+    self.itemCellTextAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0]};
+    self.itemCellLinkAttributes = @{NSFontAttributeName : [UIFont fontWithName:@"AvenirNext-Regular" size:18.0], NSForegroundColorAttributeName : [UIColor colorWithRed:54/255.0 green:136/255.0 blue:251/255.0 alpha:1.0]};
+    self.itemCellContentMode = UIViewContentModeScaleAspectFit;
+    self.items = @[];
+    
+    UILabel *placeholderLabel = [[UILabel alloc] init];
+    placeholderLabel.font = [UIFont boldSystemFontOfSize:16.0];
+    placeholderLabel.textColor = [UIColor darkGrayColor];
+    placeholderLabel.attributedText = [[NSAttributedString alloc] initWithString:@"No Items Found" attributes:self.itemCellTextAttributes];
+    placeholderLabel.textAlignment = NSTextAlignmentCenter;
+    placeholderLabel.translatesAutoresizingMaskIntoConstraints = NO;
+    self.emptyPlaceholderView = placeholderLabel;
+    
+    [self.tableView registerClass:[ContentTableViewStringCell class] forCellReuseIdentifier:kContentTableStringIdentifier];
+    [self.tableView registerClass:[ContentTableViewImageCell class] forCellReuseIdentifier:kContentTableImageIdentifier];
+    [self.tableView registerClass:[ContentTableViewViewCell class] forCellReuseIdentifier:kContentTableViewIdentifier];
+    [self.tableView registerClass:[ContentTableViewVideoCell class] forCellReuseIdentifier:kContentTableVideoIdentifier];
+}
+
+- (void)setupContentItemHeights {
+    NSMutableArray *runningItemHeights = [NSMutableArray arrayWithCapacity:_items.count];
+    UITableView *tableView = self.tableView;
+    
+    for (NSObject *item in _items) {
+        if ([item isKindOfClass:[NSString class]]) {
+            NSString *stringItem = (NSString *)item;
+            CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
+            
+            CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
+            
+            CGFloat insetStringHeight = stringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+            [runningItemHeights addObject:@(insetStringHeight+1)];
+        }
+        
+        else if ([item isKindOfClass:[NSAttributedString class]]) {
+            NSAttributedString *attributedStringItem = (NSAttributedString *)item;
+            CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
+            
+            CGSize attributedStringItemSize = [attributedStringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
+            
+            CGFloat insetStringHeight = attributedStringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+            [runningItemHeights addObject:@(insetStringHeight+1)];
+        }
+        
+        else if ([item isKindOfClass:[NSURL class]]) {
+            NSURL *URLItem = (NSURL *)item;
+            CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
+            
+            CGSize URLItemSize = [[URLItem absoluteString] boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
+            
+            CGFloat insetStringHeight = URLItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+            [runningItemHeights addObject:@(insetStringHeight+1)];
+        }
+        
+        else if ([item isKindOfClass:[UIImage class]]) {
+            UIImage *imageItem = (UIImage *)item;
+            
+            if (self.itemCellContentMode == UIViewContentModeScaleAspectFill || self.itemCellContentMode == UIViewContentModeScaleAspectFit || self.itemCellContentMode == UIViewContentModeScaleToFill) {
+                
+                CGSize scaledImageSize = imageItem.size;
+                scaledImageSize.width *= [UIScreen mainScreen].scale / imageItem.scale;
+                
+                scaledImageSize.width = fmin(self.tableView.frame.size.width - (self.itemCellInsets.left + self.itemCellInsets.right), scaledImageSize.width);
+                scaledImageSize.height *= scaledImageSize.width / imageItem.size.width;
+                
+                CGFloat imageHeight = (scaledImageSize.height + self.itemCellInsets.top + self.itemCellInsets.bottom) + 1;
+                
+                [runningItemHeights addObject:@(imageHeight)];
+
+            }
+            
+            else {
+                CGFloat insetImageHeight = imageItem.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+                [runningItemHeights addObject:@(insetImageHeight+1)];
+            }
+        }
+        
+        else if ([item isKindOfClass:[UIView class]]) {
+            UIView *viewItem = (UIView *)item;
+            CGFloat insetViewHeight = viewItem.frame.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+            [runningItemHeights addObject:@(insetViewHeight+1)];
+        }
+        
+        else if ([item isKindOfClass:[ContentVideoItem class]]) {
+            ContentVideoItem *videoItem = (ContentVideoItem *)item;
+            //CGFloat insetViewHeight = viewItem.frame.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
+            [runningItemHeights addObject:@(videoItem.videoCellHeight)];
+        }
+    }
+    
+    [self.tableView reloadData];
 }
 
 #pragma mark - setters
@@ -123,6 +201,9 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 
 - (void)setItems:(NSArray *)items {
 	_items = items;
+    
+    _itemHeights = nil;
+    [self setupContentItemHeights];
 	
 	if (self.isDisplaying) {
 		[self.tableView reloadData];
@@ -156,84 +237,11 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-	if (self.items.count == 0) {
+	if (self.items.count == 0 || !_itemHeights) {
 		return 100.0;
 	}
-	
-	NSInteger itemIndex = tableView.style == UITableViewStylePlain ? indexPath.row : indexPath.section;
-	NSObject *item = self.items[itemIndex];
-	
-	if ([item isKindOfClass:[NSString class]]) {
-		NSString *stringItem = (NSString *)item;
-		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
 		
-		CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
-		
-		CGFloat insetStringHeight = stringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetStringHeight + 1;
-	}
-	
-	else if ([item isKindOfClass:[NSAttributedString class]]) {
-		NSAttributedString *attributedStringItem = (NSAttributedString *)item;
-		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
-		
-		CGSize attributedStringItemSize = [attributedStringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size;
-		
-		CGFloat insetStringHeight = attributedStringItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetStringHeight + 1;
-	}
-	
-	else if ([item isKindOfClass:[NSURL class]]) {
-		NSURL *URLItem = (NSURL *)item;
-		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
-		
-		CGSize URLItemSize = [[URLItem absoluteString] boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
-		
-		CGFloat insetStringHeight = URLItemSize.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetStringHeight + 1;
-	}
-	
-	else if ([item isKindOfClass:[UIImage class]]) {
-		UIImage *imageItem = (UIImage *)item;
-		
-		if (self.itemCellContentMode == UIViewContentModeScaleAspectFill || self.itemCellContentMode == UIViewContentModeScaleAspectFit || self.itemCellContentMode == UIViewContentModeScaleToFill) {
-			
-			CGSize scaledImageSize = imageItem.size;
-			scaledImageSize.width *= [UIScreen mainScreen].scale / imageItem.scale;
-			
-			scaledImageSize.width = fmin(self.tableView.frame.size.width - (self.itemCellInsets.left + self.itemCellInsets.right), scaledImageSize.width);
-			scaledImageSize.height *= scaledImageSize.width / imageItem.size.width;
-			
-			return (scaledImageSize.height + self.itemCellInsets.top + self.itemCellInsets.bottom) + 1;
-		}
-		
-		else {
-			CGFloat insetImageHeight = imageItem.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-			return insetImageHeight + 1;
-		}
-	}
-	
-	else if ([item isKindOfClass:[UIView class]]) {
-		UIView *viewItem = (UIView *)item;
-		CGFloat insetViewHeight = viewItem.frame.size.height + (self.itemCellInsets.top + self.itemCellInsets.bottom);
-		return insetViewHeight + 1;
-	}
-	
-	/*else if ([item isKindOfClass:[NSArray class]]) {
-		NSArray *arrayItem = (NSArray *)item;
-		CGFloat iteratingStringItemHeight = 0;
-		CGSize tableSize = UIEdgeInsetsInsetRect(tableView.frame, tableView.contentInset).size;
-		
-		for (NSString *stringItem in arrayItem) {
-	 CGSize stringItemSize = [stringItem boundingRectWithSize:CGSizeMake(tableSize.width - (self.itemCellInsets.left + self.itemCellInsets.right), INFINITY) options:NSStringDrawingUsesLineFragmentOrigin attributes:self.itemCellTextAttributes context:nil].size;
-	 iteratingStringItemHeight += stringItemSize.height + 1.0;
-		}
-		
-		CGFloat insetStringHeight = iteratingStringItemHeight + self.itemCellInsets.top + self.itemCellInsets.bottom;
-		return insetStringHeight;
-	 }*/
-	
-	return 0;
+    return [_itemHeights[indexPath.row] floatValue];
 }
 
 #pragma mark delegate
@@ -306,22 +314,16 @@ static NSString *kContentTablePlaceholderIdentifier = @"ContentTable.Placeholder
 		viewCell.displayView = viewItem;
 		return viewCell;
 	}
-	
-	/*else if ([item isKindOfClass:[NSArray class]]) {
-		NSArray *arrayItem = (NSArray *)item;
-		
-		NSMutableString *completeString = [NSMutableString stringWithString:[arrayItem firstObject]];
-		for (int i = 1; i < arrayItem.count; i++) {
-			[completeString appendString:@"\n"];
-			[completeString appendString:arrayItem[i]];
-		}
-		
-		ContentTableViewStringCell *stringCell = [tableView dequeueReusableCellWithIdentifier:kContentTableStringIdentifier forIndexPath:indexPath];
-		stringCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
-		stringCell.displayString = [[NSAttributedString alloc] initWithString:completeString attributes:self.itemCellTextAttributes];
-		return stringCell;
-	}*/
-	
+    
+    else if ([item isKindOfClass:[ContentVideoItem class]]) {
+        ContentVideoItem *videoItem = (ContentVideoItem *)item;
+        
+        ContentTableViewVideoCell *viewCell = [tableView dequeueReusableCellWithIdentifier:kContentTableVideoIdentifier forIndexPath:indexPath];
+        viewCell.selectionStyle = self.contentDelegate ? UITableViewCellSelectionStyleDefault : UITableViewCellSelectionStyleNone;
+        viewCell.displayVideoURL = videoItem.videoURL;
+        return viewCell;
+    }
+    
     return nil;
 }
 							 

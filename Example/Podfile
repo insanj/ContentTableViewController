@@ -1,9 +1,7 @@
+platform :ios, '9.0'
+
 source 'https://github.com/CocoaPods/Specs.git'
 
 target 'ContentTableViewController', :exclusive => true do
-  pod "ContentTableViewController", :path => "../ContentTableViewController.podspec"
-end
-
-target 'Tests', :exclusive => true do
   pod "ContentTableViewController", :path => "../ContentTableViewController.podspec"
 end

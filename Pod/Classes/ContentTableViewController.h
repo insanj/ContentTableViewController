@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "ContentTableViewControllerDelegate.h"
+#import "ContentVideoItem.h"
 
 @interface ContentTableViewController : UITableViewController
 
@@ -38,7 +39,7 @@
 
 /**
  *  All items currently displayed, defaults to an empty array, with a empty state for the table.
- *	@p NSString, @p NSAttributedString, @p UIImage, @p UIView
+ *	@p NSString, @p NSAttributedString, @p UIImage, @p UIView, @p NSURL
  */
 @property (strong, nonatomic) NSArray *items;
 

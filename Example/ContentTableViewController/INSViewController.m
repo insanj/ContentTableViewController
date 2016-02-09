@@ -39,6 +39,8 @@
 	NSAttributedString *attributeStringItem = [[NSAttributedString alloc] initWithString:@"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum." attributes:@{NSFontAttributeName : [UIFont systemFontOfSize:10.0], NSForegroundColorAttributeName : [UIColor darkGrayColor]}];
 	
 	NSURL *linkItem = [NSURL URLWithString:@"https://github.com/insanj/ContentTableViewController"];
+    
+    ContentVideoItem *videoItem = [ContentVideoItem itemWithURL:[NSURL URLWithString:@"https://ia800300.us.archive.org/7/items/electricsheep-flock-244-72500-3/00244=72533=72533=72533.mp4"]];
 	
 	UIImage *wideImageItem = [UIImage imageNamed:@"cheese"];
 	UIImage *tallImageItem = [UIImage imageNamed:@"empire"];
@@ -51,7 +53,7 @@
 	viewItem.layer.masksToBounds = YES;
 	viewItem.layer.cornerRadius = 25.0;
 	
-	self.contentController.items = @[stringItem, attributeStringItem, linkItem, wideImageItem, tallImageItem, squareImageItem, smallImageItem, viewItem];
+	self.contentController.items = @[stringItem, videoItem, attributeStringItem, linkItem, wideImageItem, tallImageItem, squareImageItem, smallImageItem, viewItem];
 }
 
 - (void)viewItemButtonTapped:(UIButton *)sender {
